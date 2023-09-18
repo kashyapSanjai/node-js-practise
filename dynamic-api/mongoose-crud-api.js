@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require('multer');
 require("./config");
 const Product = require("./product");
 
@@ -50,6 +51,23 @@ app.get("/search/:key",async (req,resp)=>{
     })
     console.log(req.params);
     resp.send(data);
+})
+
+const upload = multer({
+    storage: multer.diskStorage({
+        destination:function(req,file,cb){
+            cb(null,"uploads/");//"uploads" is destination folder name
+        },
+        filename:function(req,file,cb){
+            cb(null,file.fieldname+"-"+Date.now()+".jpeg");
+        }
+    })//"user_file" is param in which file is send
+}).single("user_file")
+
+http://localhost:5000/upload  & param type file
+app.post("/upload",upload,(req,resp)=>{
+    console.log(req.body);
+    resp.send("resp code working");
 })
 
 
